@@ -53,4 +53,4 @@ def handle_register(data):
     emit('registration', {'status': 'registered successfully'})
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, port=5000, host='0.0.0.0')
