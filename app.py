@@ -1,12 +1,30 @@
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
-
+from flask_cors import CORS
+import time
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+
 # Dictionary to keep track of streamers and their sockets
 streamers = {}
+# Middleware for logging
+@app.before_request
+async def log_request():
+    request.start_time = time.time()  # Record the start time
+    request_data = await request.get_data()  # Get request data if needed
+    app.logger.info(f'Before Request: Method={request.method}, Path={request.path}, Body={request_data.decode()}')
+
+@app.after_request
+async def log_response(response):
+    duration = time.time() - request.start_time  # Calculate how long the request took
+    app.logger.info(f'After Request: Method={request.method}, Path={request.path}, Status={response.status_code}, Duration={duration:.2f} sec')
+    return response
 
 @app.route('/post_comment', methods=['POST'])
 def post_comment():
