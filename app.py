@@ -79,7 +79,8 @@ def handle_disconnect():
     if streamer_id:
         # Perform cleanup for the disconnecting streamer
         del streamers[streamer_id]
-        del COMMENTS[streamer_id]
+        if streamer_id in COMMENTS:
+            del COMMENTS[streamer_id]  
         print(streamers,COMMENTS)
         print(f'Client {streamer_id} disconnected')
     else:
