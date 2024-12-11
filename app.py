@@ -28,7 +28,7 @@ def post_comment():
         return jsonify({'status': 'streamer not found'}), 404
 
 @app.route('/get_comments')
-async def get_comments():
+def get_comments():
     streamer_id = request.args.get('streamerId')
     index = int(request.args.get('index', -1))
     limit = int(request.args.get('limit', 3))
