@@ -19,13 +19,17 @@ def post_comment():
     data = request.json
     streamer_id = data.get('streamer_id')
     comment = data.get('comment')
-
-    if streamer_id in streamers:
-        COMMENTS[streamer_id].append(comment)
-        socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
-        return jsonify({'status': 'success'}), 200
-    else:
-        return jsonify({'status': 'streamer not found'}), 404
+    print("post Comment/ session id", streamer_id, "comment is: ", comment)
+    # if streamer_id in streamers:
+    #     COMMENTS[streamer_id].append(comment)
+    #     socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
+    #     return jsonify({'status': 'success'}), 200
+    # else:
+    #     return jsonify({'status': 'streamer not found'}), 404
+    # TODO: ALways return now for testing, need to delete the following the uncomment the previous part
+    COMMENTS[streamer_id].append(comment)
+    socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
+    return jsonify({'status': 'success'}), 200
 
 @app.route('/get_comments')
 def get_comments():
