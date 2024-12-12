@@ -17,7 +17,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/post_comment', methods=['POST'])
 def post_comment():
     data = request.json
-    streamer_id = data.get('streamer_id')
+    streamer_id = data.get('session_id')
     comment = data.get('comment')
     print("post Comment/ session id", streamer_id, "comment is: ", comment)
     # if streamer_id in streamers:
