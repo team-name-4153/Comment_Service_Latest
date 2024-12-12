@@ -28,8 +28,10 @@ def post_comment():
     #     return jsonify({'status': 'streamer not found'}), 404
     # TODO: ALways return now for testing, need to delete the following the uncomment the previous part
     COMMENTS[streamer_id].append(comment)
-    socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
-    return jsonify({'status': 'success'}), 200
+    if streamer_id in streamers:
+        socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
+        return jsonify({'status': 'success'}), 200
+    return jsonify({'status': 'success without actual streamer for testing'}), 200
 
 @app.route('/get_comments')
 def get_comments():
