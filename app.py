@@ -19,7 +19,8 @@ def post_comment():
     data = request.json
     streamer_id = data.get('session_id')
     comment = data.get('comment')
-    print("post Comment/ session id", streamer_id, "comment is: ", comment)
+    user_id = data.get('user_id')
+    print("post Comment/ session id", streamer_id, "comment is: ", comment, 'user_id')
     # if streamer_id in streamers:
     #     COMMENTS[streamer_id].append(comment)
     #     socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
@@ -27,9 +28,9 @@ def post_comment():
     # else:
     #     return jsonify({'status': 'streamer not found'}), 404
     # TODO: ALways return now for testing, need to delete the following the uncomment the previous part
-    COMMENTS[streamer_id].append(comment)
+    COMMENTS[streamer_id].append({"user_id":user_id, "comment": comment})
     if streamer_id in streamers:
-        socketio.emit('new_comment', {'comment': comment}, to=streamers[streamer_id])
+        socketio.emit('new_comment', {'comment': comment,'user_id':user_id}, to=streamers[streamer_id])
         return jsonify({'status': 'success'}), 200
     return jsonify({'status': 'success without actual streamer for testing'}), 200
 
@@ -46,7 +47,7 @@ def get_comments():
     if index >= len(comment_list) or index == -1:
         next_url = url_for('get_comments', streamerId=streamer_id, index=len(comment_list), limit=limit, _external=True)
         r_comments = comment_list[-1] if len(comment_list) and index == -1 else []
-        return jsonify({"comments": r_comments, "links": {"self": next_url,
+        return jsonify({"comments": r_comments[1], "user_id": r_comments[0],"links": {"self": next_url,
                                                   "next":next_url}}), 200  # or 404 if you prefer to indicate "out of range"
 
     # Slice the comments array to get the requested chunk
